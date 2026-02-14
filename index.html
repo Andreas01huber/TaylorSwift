@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taylor Swift Quiz 💘</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg1:#0b0b12;
+      --bg2:#17112b;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.12);
+      --text:#f7f3ff;
+      --muted: rgba(247,243,255,.78);
+      --muted2: rgba(247,243,255,.62);
+      --accent:#ff4f92;
+      --accent2:#8a63ff;
+      --good:#32d583;
+      --bad:#ff5a5f;
+      --shadow: 0 18px 48px rgba(0,0,0,.45);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Poppins",system-ui,-apple-system,sans-serif;
+      color:var(--text);
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      background:
+        radial-gradient(1100px 700px at 10% -10%, rgba(255,79,146,.35), transparent 60%),
+        radial-gradient(900px 650px at 110% 10%, rgba(138,99,255,.35), transparent 55%),
+        radial-gradient(800px 600px at 40% 120%, rgba(50,213,131,.22), transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      overflow-x:hidden;
+    }
+    .wrap{
+      width:min(100%, 520px);
+      position:relative;
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+    header{
+      padding:18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(900px 250px at 0% 0%, rgba(255,79,146,.22), transparent 60%),
+        radial-gradient(900px 250px at 100% 0%, rgba(138,99,255,.20), transparent 60%);
+    }
+    .title{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+    }
+    h1{
+      font-family:"Playfair Display", serif;
+      font-weight:700;
+      letter-spacing:.2px;
+      line-height:1.05;
+      font-size: clamp(1.45rem, 5.8vw, 2rem);
+    }
+    .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.4;
+    }
+    .pill{
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      color:var(--muted);
+      font-size:.8rem;
+      white-space:nowrap;
+    }
+
+    .topbar{
+      padding:14px 18px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .progressRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .bar{
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 380ms ease;
+    }
+
+    .content{
+      padding: 0 18px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .media{
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      position:relative;
+    }
+    .media img{
+      width:100%;
+      height: 210px;
+      object-fit: cover;
+      display:block;
+      filter: saturate(1.05) contrast(1.02);
+    }
+    .media .caption{
+      position:absolute;
+      left:10px;
+      bottom:10px;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,.40);
+      border:1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.92);
+      font-size:.78rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .qCard{
+      padding:14px 14px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .qMeta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color: var(--muted);
+      font-size:.9rem;
+      margin-bottom:8px;
+    }
+    .qText{
+      font-size: clamp(1.05rem, 4.2vw, 1.22rem);
+      line-height:1.45;
+      font-weight:600;
+      letter-spacing:.1px;
+    }
+    .answers{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    button{
+      font-family:inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn{
+      width:100%;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px 14px;
+      font-size: 1rem;
+      font-weight:600;
+      line-height:1.2;
+      cursor:pointer;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      text-align:left;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.11); }
+    .btn:active{ transform: scale(.985); }
+    .badge{
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      font-size:.88rem;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.92);
+    }
+    .btn.good{
+      border-color: rgba(50,213,131,.55);
+      background: rgba(50,213,131,.12);
+      box-shadow: 0 10px 22px rgba(50,213,131,.10);
+    }
+    .btn.bad{
+      border-color: rgba(255,90,95,.55);
+      background: rgba(255,90,95,.12);
+      box-shadow: 0 10px 22px rgba(255,90,95,.10);
+    }
+
+    .hintRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:12px;
+    }
+    .hintBtn{
+      border:none;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      color: var(--muted);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:.9rem;
+      cursor:pointer;
+      transition: background 180ms ease, transform 180ms ease;
+      white-space:nowrap;
+    }
+    .hintBtn:hover{ background: rgba(255,255,255,.14); transform: translateY(-1px); }
+    .hintBox{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border:1px dashed rgba(255,255,255,.20);
+      color: var(--muted);
+      line-height:1.5;
+      font-size:.95rem;
+      display:none;
+    }
+    .hintBox.show{ display:block; }
+    .status{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--muted);
+      line-height:1.5;
+      font-size:.95rem;
+      display:none;
+    }
+    .status.show{ display:block; }
+    .status strong{ color: var(--text); }
+    .nextRow{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
+    .primary{
+      border:none;
+      border-radius: 16px;
+      padding: 14px 14px;
+      font-size: 1rem;
+      font-weight:700;
+      cursor:pointer;
+      color:white;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 14px 30px rgba(138,99,255,.16);
+      transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+      width:100%;
+    }
+    .primary:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(138,99,255,.22); }
+    .primary:active{ transform: scale(.985); }
+    .ghost{
+      border-radius:16px;
+      padding:14px 14px;
+      width:100%;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.16);
+      color: var(--text);
+      font-weight:700;
+      cursor:pointer;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+    .ghost:hover{ transform: translateY(-1px); background: rgba(255,255,255,.11); }
+
+    .finish{
+      padding: 18px;
+      display:none;
+    }
+    .finish.show{ display:block; }
+    .finish h2{
+      font-family:"Playfair Display", serif;
+      font-size: clamp(1.55rem, 6vw, 2.1rem);
+      line-height:1.1;
+      margin-bottom:8px;
+    }
+    .scoreLine{
+      color: var(--muted);
+      font-size:1rem;
+      line-height:1.5;
+      margin-bottom:14px;
+    }
+    .meter{
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      padding:14px;
+    }
+    .meterTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+      color: var(--muted);
+      font-size:.92rem;
+    }
+    .scale{
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+      position:relative;
+    }
+    .scaleFill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 420ms ease;
+      border-radius:999px;
+    }
+    .rank{
+      margin-top:10px;
+      font-size: 1.05rem;
+      line-height:1.5;
+      color: var(--text);
+      font-weight:700;
+    }
+    .rank small{
+      display:block;
+      margin-top:6px;
+      font-weight:500;
+      color: var(--muted);
+    }
+    footer{
+      margin-top:12px;
+      text-align:center;
+      color: rgba(247,243,255,.55);
+      font-size:.8rem;
+      padding: 0 10px 14px;
+    }
+
+    /* versteckte mini-hints (Easter Eggs) */
+    .egg{
+      opacity:.13;
+      font-size:.82rem;
+      margin-top:10px;
+      user-select:none;
+      letter-spacing:.2px;
+    }
+
+    @media (min-width:560px){
+      .media img{ height: 250px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="quizCard">
+      <header>
+        <div class="title">
+          <div>
+            <h1>Taylor Swift Quiz ✨</h1>
+            <div class="sub">10 Fragen • 2 Antworten • versteckte Hints • am Ende dein Swiftie-Score</div>
+          </div>
+          <div class="pill" id="scorePill">Score: 0/10</div>
+        </div>
+      </header>
+
+      <div class="topbar">
+        <div class="progressRow">
+          <div><strong id="progressText">0</strong> / 10 beantwortet</div>
+          <div id="tinyHint" title="Psst… da steckt ein Hint drin 👀">🕵️‍♀️</div>
+        </div>
+        <div class="bar" aria-label="Fortschritt">
+          <div id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="content" id="questionArea">
+        <div class="media" aria-hidden="false">
+          <img id="qImg" alt="Taylor Swift Bild" />
+          <div class="caption" id="qCaption">Easter Egg: …</div>
+        </div>
+
+        <div class="qCard">
+          <div class="qMeta">
+            <div>Frage <strong id="qNumber">1</strong></div>
+            <div>Level: <strong id="qLevel">Tricky</strong></div>
+          </div>
+
+          <div class="qText" id="qText">…</div>
+
+          <div class="answers" role="group" aria-label="Antworten">
+            <button class="btn" id="btnA" type="button">
+              <span class="badge">A</span>
+              <span id="txtA">…</span>
+            </button>
+            <button class="btn" id="btnB" type="button">
+              <span class="badge">B</span>
+              <span id="txtB">…</span>
+            </button>
+          </div>
+
+          <div class="hintRow">
+            <button class="hintBtn" id="hintBtn" type="button">Hint anzeigen 💡</button>
+            <button class="hintBtn" id="skipBtn" type="button" title="Ohne Punkte weiter">Skip ↷</button>
+          </div>
+
+          <div class="hintBox" id="hintBox"></div>
+          <div class="status" id="statusBox"></div>
+
+          <div class="nextRow" id="nextRow" style="display:none;">
+            <button class="primary" id="nextBtn" type="button">Nächste Frage →</button>
+          </div>
+
+          <div class="egg" id="eggLine">…</div>
+        </div>
+      </div>
+
+      <div class="finish" id="finishArea">
+        <h2>Fertig! 💖</h2>
+        <div class="scoreLine" id="finalLine">Du hast …</div>
+
+        <div class="meter">
+          <div class="meterTop">
+            <div>Swiftie-Skala (1–10)</div>
+            <div><strong id="fanNumber">1</strong>/10</div>
+          </div>
+          <div class="scale" aria-label="Skala 1 bis 10">
+            <div class="scaleFill" id="fanFill"></div>
+          </div>
+          <div class="rank" id="rankText">…<small id="rankSub">…</small></div>
+        </div>
+
+        <div class="nextRow" style="margin-top:14px;">
+          <button class="primary" id="restartBtn" type="button">Nochmal spielen 🔁</button>
+          <button class="ghost" id="shareBtn" type="button">Score teilen 📲</button>
+        </div>
+
+        <footer>
+          Bilder via Wikimedia Commons (frei lizenziert). Hints sind absichtlich “easter-eggy” 😉
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Bilder (Wikimedia Commons FilePath) – robust & frei lizenziert
+    const images = [
+      {
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Taylor%20Swift%202019%20by%20Glenn%20Francis%20(cropped).jpg?width=1200",
+        cap: "Hint: 13 ist nicht nur eine Zahl… 😉",
+        egg: "Easter Egg: „Long live the…“"
+      },
+      {
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Taylor%20Swift%20Eras%2008092023-581%20(1).jpg?width=1200",
+        cap: "Hint: Eras ≠ nur ein Konzert, eher ein Multiversum.",
+        egg: "Easter Egg: „Meet me at midnight“"
+      },
+      {
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Taylor%20Swift%20(6966830273).jpg?width=1200",
+        cap: "Hint: Manche Antworten sind… 'Red' flags 😅",
+        egg: "Easter Egg: „I remember it all too well…“"
+      },
+      {
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Taylor%20Swift%20RED%20Tour%202014,%20Singapore.jpg?width=1200",
+        cap: "Hint: Era-Wechsel? Farbe hilft. 🎨",
+        egg: "Easter Egg: „This is a new soundtrack…“"
+      },
+      {
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Taylor%20Swift%20at%20the%202023%20MTV%20Video%20Music%20Awards%20(1).png?width=1200",
+        cap: "Hint: Awards, Rekorde… und Easter Eggs überall.",
+        egg: "Easter Egg: „Are you ready for it?“"
+      }
+    ];
+
+    // 10 Fragen, je 2 Antworten, mit Hint (und optional Zusatzhint bei falsch)
+    const quiz = [
+      {
+        level: "Tricky",
+        q: "In welchem Bundesstaat ist Taylor Swift geboren?",
+        a: "Pennsylvania",
+        b: "Tennessee",
+        correct: "A",
+        hint: "Denke an Reading… nicht an Nashville.",
+        extraHint: "Sie ist in Reading, Pennsylvania geboren – später zog sie wegen der Musik nach Tennessee."
+      },
+      {
+        level: "Swiftie-Nerd",
+        q: "Welcher dieser Songs ist KEIN Track auf dem Album „1989“ (Original, 2014)?",
+        a: "New Romantics",
+        b: "All Too Well",
+        correct: "B",
+        hint: "„All Too Well“ gehört farblich eher zur „Red“-Welt.",
+        extraHint: "„All Too Well“ ist ein ikonischer Track von „Red“."
+      },
+      {
+        level: "Tricky",
+        q: "Wie heißt Taylors berühmte Katzen-Trio-Konstellation NICHT?",
+        a: "Meredith, Olivia, Benjamin",
+        b: "Meredith, Daisy, Benjamin",
+        correct: "B",
+        hint: "Die zweite Katze trägt einen Popkultur-Namen, keine Blume.",
+        extraHint: "Es sind Meredith Grey, Olivia Benson und Benjamin Button."
+      },
+      {
+        level: "Swiftie-Nerd",
+        q: "Welches Wort taucht im Titel eines Albums NICHT auf?",
+        a: "Evermore",
+        b: "Midnight",
+        correct: "B",
+        hint: "Es heißt „Midnights“ (Plural).",
+        extraHint: "Albumtitel: „Midnights“ – nicht „Midnight“."
+      },
+      {
+        level: "Deep Cut",
+        q: "Welche dieser Kollabos ist auf „folklore“ (Standard/Deluxe) zu hören?",
+        a: "Exile (feat. Bon Iver)",
+        b: "End Game (feat. Ed Sheeran & Future)",
+        correct: "A",
+        hint: "„folklore“ ist eher Indie-Herzschmerz als Stadion-Rap-Pop.",
+        extraHint: "„End Game“ ist auf „reputation“, „exile“ auf „folklore“."
+      },
+      {
+        level: "Tricky",
+        q: "Welche Zahl gilt als Taylors „Glückszahl“ und taucht oft als Easter Egg auf?",
+        a: "13",
+        b: "22",
+        correct: "A",
+        hint: "Die andere Zahl ist zwar ein Songtitel, aber nicht die Glückszahl.",
+        extraHint: "13 ist ihr wiederkehrendes Easter Egg (z. B. auf Hand, Daten, Tracklists)."
+      },
+      {
+        level: "Deep Cut",
+        q: "Welcher Song ist bekannt für die Zeile „Casually cruel in the name of being honest“?",
+        a: "All Too Well",
+        b: "Back to December",
+        correct: "A",
+        hint: "Denk an Schal, Herbst, und viel zu viele Gefühle.",
+        extraHint: "Die Zeile ist aus „All Too Well“."
+      },
+      {
+        level: "Swiftie-Nerd",
+        q: "Welche Farbe/Ästhetik wird am stärksten mit der „reputation“-Era verbunden?",
+        a: "Schwarz & Schlangen",
+        b: "Pastell & Glitzer",
+        correct: "A",
+        hint: "„There will be no explanation…“ – aber eine Schlange schon 🐍",
+        extraHint: "reputation = dunkler Look, Schwarz, Schlangen-Motive."
+      },
+      {
+        level: "Tricky",
+        q: "Was war Taylors erstes Studioalbum?",
+        a: "Fearless",
+        b: "Taylor Swift",
+        correct: "B",
+        hint: "Das Debüt war selbstbetitelt.",
+        extraHint: "Debütalbum: „Taylor Swift“ (2006)."
+      },
+      {
+        level: "Deep Cut",
+        q: "Welche dieser Zeilen ist aus „Blank Space“?",
+        a: "Got a long list of ex-lovers",
+        b: "Nice to meet you, where you been?",
+        correct: "A",
+        hint: "Die andere Zeile gehört zu einem Song, der nach einer Stadt klingt.",
+        extraHint: "„Nice to meet you, where you been?“ ist aus „Style“. „Blank Space“ hat die Ex-Lovers-Liste."
+      }
+    ];
+
+    // UI Elements
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const scorePill = document.getElementById("scorePill");
+    const qNumber = document.getElementById("qNumber");
+    const qLevel = document.getElementById("qLevel");
+    const qText = document.getElementById("qText");
+    const btnA = document.getElementById("btnA");
+    const btnB = document.getElementById("btnB");
+    const txtA = document.getElementById("txtA");
+    const txtB = document.getElementById("txtB");
+    const hintBtn = document.getElementById("hintBtn");
+    const skipBtn = document.getElementById("skipBtn");
+    const hintBox = document.getElementById("hintBox");
+    const statusBox = document.getElementById("statusBox");
+    const nextRow = document.getElementById("nextRow");
+    const nextBtn = document.getElementById("nextBtn");
+    const eggLine = document.getElementById("eggLine");
+
+    const qImg = document.getElementById("qImg");
+    const qCaption = document.getElementById("qCaption");
+    const tinyHint = document.getElementById("tinyHint");
+
+    const questionArea = document.getElementById("questionArea");
+    const finishArea = document.getElementById("finishArea");
+    const finalLine = document.getElementById("finalLine");
+    const fanNumber = document.getElementById("fanNumber");
+    const fanFill = document.getElementById("fanFill");
+    const rankText = document.getElementById("rankText");
+    const rankSub = document.getElementById("rankSub");
+    const restartBtn = document.getElementById("restartBtn");
+    const shareBtn = document.getElementById("shareBtn");
+
+    let idx = 0;
+    let score = 0;
+    let answered = 0;
+    let locked = false;
+    let usedHintThisQ = false;
+
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function setProgress() {
+      progressText.textContent = String(answered);
+      progressBar.style.width = `${(answered / quiz.length) * 100}%`;
+      scorePill.textContent = `Score: ${score}/${quiz.length}`;
+    }
+
+    function setMediaForQuestion(i){
+      const im = images[i % images.length];
+      qImg.src = im.src;
+      qCaption.textContent = im.cap;
+      eggLine.textContent = im.egg;
+      // micro hint in icon
+      tinyHint.textContent = (i % 2 === 0) ? "🕵️‍♀️" : "🧩";
+      tinyHint.title = (i % 2 === 0)
+        ? "Psst… achte auf Jahreszahlen & Albumtitel."
+        : "Psst… Farben/Eras sind oft die Lösung.";
+    }
+
+    function renderQuestion() {
+      locked = false;
+      usedHintThisQ = false;
+
+      hintBox.classList.remove("show");
+      statusBox.classList.remove("show");
+      nextRow.style.display = "none";
+
+      btnA.classList.remove("good","bad");
+      btnB.classList.remove("good","bad");
+      btnA.disabled = false;
+      btnB.disabled = false;
+
+      const item = quiz[idx];
+      qNumber.textContent = String(idx + 1);
+      qLevel.textContent = item.level;
+      qText.textContent = item.q;
+      txtA.textContent = item.a;
+      txtB.textContent = item.b;
+
+      setMediaForQuestion(idx);
+      setProgress();
+    }
+
+    function showHint(extra=false){
+      const item = quiz[idx];
+      hintBox.textContent = extra ? item.extraHint : item.hint;
+      hintBox.classList.add("show");
+      usedHintThisQ = true;
+    }
+
+    function answer(choice) {
+      if (locked) return;
+      locked = true;
+
+      const item = quiz[idx];
+      const correct = item.correct;
+
+      const chosenBtn = (choice === "A") ? btnA : btnB;
+      const otherBtn  = (choice === "A") ? btnB : btnA;
+
+      // mark correct/incorrect
+      if (choice === correct) {
+        chosenBtn.classList.add("good");
+        statusBox.innerHTML = `✅ <strong>Richtig!</strong> Kleines Easter Egg: Schau auf die Caption 👀`;
+        statusBox.classList.add("show");
+        score += 1;
+      } else {
+        chosenBtn.classList.add("bad");
+        otherBtn.classList.add("good");
+        statusBox.innerHTML = `❌ <strong>Nicht ganz.</strong> Mini-Tipp eingeblendet 😉`;
+        statusBox.classList.add("show");
+        showHint(true);
+      }
+
+      btnA.disabled = true;
+      btnB.disabled = true;
+
+      answered += 1;
+      setProgress();
+
+      nextRow.style.display = "block";
+    }
+
+    function next(){
+      if (idx < quiz.length - 1) {
+        idx += 1;
+        renderQuestion();
+      } else {
+        finish();
+      }
+    }
+
+    function finish(){
+      questionArea.style.display = "none";
+      finishArea.classList.add("show");
+
+      const total = quiz.length;
+      const fan = clamp(Math.round((score / total) * 10), 1, 10);
+
+      finalLine.textContent = `Du hast ${score} von ${total} richtig.`;
+
+      fanNumber.textContent = String(fan);
+      fanFill.style.width = `${(fan/10)*100}%`;
+
+      const ranks = [
+        {min:1, max:2, title:"Casual Listener 🌙", sub:"Du kennst die Hits – Zeit für ein paar Deep Cuts."},
+        {min:3, max:4, title:"Era-Explorer 🧭", sub:"Du bist auf dem richtigen Weg. Achte mehr auf Lyrics/Easter Eggs."},
+        {min:5, max:6, title:"Swiftie-in-Training 💿", sub:"Solide! Ein paar Album-Welten fehlen noch."},
+        {min:7, max:8, title:"Echter Swiftie ✨", sub:"Stark! Du erkennst Eras, Lyrics & Lore ziemlich sicher."},
+        {min:9, max:10, title:"Mastermind 🐍🕰️", sub:"Du bist das Easter-Egg-Radar. Taylor wäre stolz."},
+      ];
+      const r = ranks.find(x => fan >= x.min && fan <= x.max) || ranks[0];
+      rankText.textContent = r.title;
+      rankSub.textContent = r.sub;
+
+      // update pill
+      scorePill.textContent = `Score: ${score}/${total}`;
+      progressText.textContent = String(total);
+      progressBar.style.width = "100%";
+    }
+
+    function restart(){
+      idx = 0; score = 0; answered = 0; locked = false;
+      finishArea.classList.remove("show");
+      questionArea.style.display = "flex";
+      renderQuestion();
+    }
+
+    async function share(){
+      const total = quiz.length;
+      const fan = clamp(Math.round((score / total) * 10), 1, 10);
+      const text = `Mein Taylor-Quiz Score: ${score}/${total} • Swiftie-Skala: ${fan}/10 ✨`;
+      try{
+        if (navigator.share){
+          await navigator.share({ title:"Taylor Swift Quiz", text });
+        } else {
+          await navigator.clipboard.writeText(text);
+          alert("Score kopiert ✅\n\n" + text);
+        }
+      }catch(e){
+        // fallback
+        try{
+          await navigator.clipboard.writeText(text);
+          alert("Score kopiert ✅\n\n" + text);
+        }catch(_){
+          prompt("Kopiere deinen Score:", text);
+        }
+      }
+    }
+
+    // events
+    btnA.addEventListener("click", () => answer("A"));
+    btnB.addEventListener("click", () => answer("B"));
+    nextBtn.addEventListener("click", next);
+
+    hintBtn.addEventListener("click", () => {
+      if (!hintBox.classList.contains("show")) showHint(false);
+      else hintBox.classList.toggle("show");
+    });
+
+    skipBtn.addEventListener("click", () => {
+      if (locked) return;
+      locked = true;
+      answered += 1;
+      statusBox.innerHTML = `↷ <strong>Übersprungen.</strong> Kein Punkt – aber ein Hint für später 😉`;
+      statusBox.classList.add("show");
+      showHint(false);
+      btnA.disabled = true; btnB.disabled = true;
+      setProgress();
+      nextRow.style.display = "block";
+    });
+
+    restartBtn.addEventListener("click", restart);
+    shareBtn.addEventListener("click", share);
+
+    // init
+    renderQuestion();
+  </script>
+</body>
+</html>
